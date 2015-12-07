@@ -4,25 +4,11 @@
 ## Harvard University, Class of 2016
 ## ---------------------------------------------------------------------------------------------------
 
-setwd("/Users/cello72294/Desktop/Headbop Coded CSVs")
-
-#Read in and merge individual data sets
-
-load_data <- function(path) { 
-  files <- dir(path, pattern = '\\.csv', full.names = TRUE)
-  tables <- lapply(files, read.csv)
-  do.call(rbind, tables)
-}
-
-alldata <- load_data("/Users/cello72294/Desktop/Headbop Coded CSVs")
-
-head(alldata)
-attach(alldata)
 
 
 ## Exploratory Descriptive Analyses -----------------------------------------------------------------------------
 
-## Load Packages Here
+
 if (!require(graphics)) {install.packages("graphics"); require(graphics)}
 
 
@@ -34,6 +20,8 @@ raw.data <- read.csv("HBThesis_Data.csv")
 
 mydata <- raw.data[raw.data$Include == 1,]
 mydata <- raw.data[!is.na(raw.data$Has.Exploration.Period),]
+
+attach(mydata)
 
 # Number of participants
 
@@ -50,14 +38,9 @@ boys
 
 # Age 
 
+summary(mydata$Year.and.Months)
 summary(mydata$Days.Old)
-
-daysold <- range(mydata$Days.Old)
-monthsold <- daysold/30
-  
-daysold
-monthsold
-
+hist(Days.Old)
 
 # MCDI 
 
@@ -76,7 +59,82 @@ boxplot(MMCDI, main = "Boys' MCDI Score", xlab = "Participants", ylab = "Vocab S
 par(op)
 
 
+# Per Condition 
+
+# gender, age, MCDI
+sub.ex.man <- subset(mydata, Lang.Condition == "Dax to toy" & Action.Condition == "Hands Free", select = c(Gender, Days.Old, Raw.MCDI..Harvard.Only.))
+sub.ex.out <- subset(mydata, Lang.Condition == "Dax toy" & Action.Condition == "Hands Free", select = c(Gender, Days.Old, Raw.MCDI..Harvard.Only.))
+sub.oc.man <- subset(mydata, Lang.Condition == "Dax to toy" & Action.Condition == "Hands Occupied", select = c(Gender, Days.Old, Raw.MCDI..Harvard.Only.))
+sub.oc.out <- subset(mydata, Lang.Condition == "Dax toy" & Action.Condition == "Hands Occupied", select = c(Gender, Days.Old, Raw.MCDI..Harvard.Only.))
+
+# Exposed, Manner 
+sem.girls <- sum(sub.ex.man$Gender == "F")
+sem.boys <- sum(sub.ex.man$Gender == "M")
+sem.age <- mean(sub.ex.man$Days.Old)
+sem.MCDI <- mean(sub.ex.man$Raw.MCDI..Harvard.Only.)
+ex.man <- c(sem.girls, sem.boys, I(sem.age/30), sem.MCDI)
+ex.man
+
+# Exposed, Outcome 
+seo.girls <- sum(sub.ex.out$Gender == "F")
+seo.boys <- sum(sub.ex.out$Gender == "M")
+seo.age <- mean(sub.ex.out$Days.Old)
+seo.MCDI <- mean(sub.ex.out$Raw.MCDI..Harvard.Only.)
+ex.out <- c(seo.girls, seo.boys, I(seo.age/30), seo.MCDI)
+ex.out
+
+# Occupied, Manner 
+som.girls <- sum(sub.oc.man$Gender == "F")
+som.boys <- sum(sub.oc.man$Gender == "M")
+som.age <- mean(sub.oc.man$Days.Old)
+som.MCDI <- mean(sub.oc.man$Raw.MCDI..Harvard.Only.)
+oc.man <- c(som.girls, som.boys, I(som.age/30), som.MCDI)
+oc.man
+
+# Occupied, Outcome 
+soo.girls <- sum(sub.oc.out$Gender == "F")
+soo.boys <- sum(sub.oc.out$Gender == "M")
+soo.age <- mean(sub.oc.out$Days.Old)
+soo.MCDI <- mean(sub.oc.out$Raw.MCDI..Harvard.Only.)
+oc.out <- c(soo.girls, soo.boys, I(soo.age/30), soo.MCDI)
+oc.out
+
+x11()
+op <- par(mfrow = c(2,2))
+barplot(ex.man, names.arg = c("Girls", "Boys", "Mean Age (mos)", "Mean Vocab"),
+        cex.names = .8, col = c("lightpink", "lightblue", "whitesmoke", "whitesmoke"), main = "Exposed, Manner", axes = FALSE)
+axis(2, las = 1, at = seq(0 , 30, by = 5))
+barplot(ex.out, names.arg = c("Girls", "Boys", "Mean Age (mos)", "Mean Vocab"), 
+        cex.names = .8, col = c("lightpink", "lightblue", "whitesmoke", "whitesmoke"), main = "Exposed, Outcome", axes = FALSE)
+axis(2, las = 1, at = seq(0 , 30, by = 5))
+barplot(oc.man, names.arg = c("Girls", "Boys", "Mean Age (mos)", "Mean Vocab"), 
+        cex.names = .8, col = c("lightpink", "lightblue", "whitesmoke", "whitesmoke"), main = "Occupied, Manner", axes = FALSE)
+axis(2, las = 1, at = seq(0 , 30, by = 5))
+barplot(oc.out, names.arg = c("Girls", "Boys", "Mean Age (mos)", "Mean Vocab"), 
+        cex.names = .8, col = c("lightpink", "lightblue", "whitesmoke", "whitesmoke"), main = "Occupied, Outcome", axes = FALSE)
+axis(2, las = 1, at = seq(0 , 30, by = 5))
+par(op)
+
+detach(mydata)
+
+# -----------------------------------------------------------------------
+
+#Read in and merge individual data sets
+
+load_data <- function(path) { 
+  files <- dir(path, pattern = '\\.csv', full.names = TRUE)
+  tables <- lapply(files, read.csv)
+  do.call(rbind, tables)
+}
+
+alldata <- load_data("/Users/cello72294/Desktop/Headbop Coded CSVs")
+
+head(alldata)
+attach(alldata)
+
 ## Trial Length Descriptives ----------------------
+
+
 
 # Initializing the data frame 
 trial.data <- subset(alldata, TrackName == "Total Trial Length", select = c(Participant, Condition, Hands, Language, Duration))
@@ -101,17 +159,17 @@ trial.oc <- subset(participant.trial, Hands == "Occupied", select = c(Participan
 x11()
 op <- par(mfrow = c(1,2))
 plot(trial.ex, type = "p", main = "Total Trial Duration - Hands Exposed", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 20))
-     mdex <- mean(duration.minutes)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 20))
+mdex <- mean(duration.minutes)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(trial.oc, type = "p", main = "Total Trial Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 20))     
-     mdoc <- mean(duration.minutes) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 20))     
+mdoc <- mean(duration.minutes) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 # Between Language Conditions
@@ -127,17 +185,17 @@ trial.out <- subset(participant.trial, Language == "Dax", select = c(Participant
 x11()
 op <- par(mfrow = c(1,2))
 plot(trial.man, type = "p", main = "Total Trial Duration - Manner", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 20))
-     mdex <- mean(duration.minutes)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 20))
+mdex <- mean(duration.minutes)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(trial.out, type = "p", main = "Total Trial Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 20))     
-     mdoc <- mean(duration.minutes) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 20))     
+mdoc <- mean(duration.minutes) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 # Between All Conditions
@@ -151,10 +209,10 @@ trial.4 <- subset(participant.trial, Condition == "Occupied, Dax", select = c(Pa
 
 x11()
 op <- par(mfrow = c(1,4))
-     boxplot(trial.1[2], main = "Exposed, Dax To", ylab = "Demonstration Duration (s)")
-     boxplot(trial.2[2], main = "Exposed, Dax")
-     boxplot(trial.3[2], main = "Occupied, Dax To")
-     boxplot(trial.4[2], main = "Occupied, Dax")
+boxplot(trial.1[2], main = "Exposed, Dax To", ylab = "Demonstration Duration (s)")
+boxplot(trial.2[2], main = "Exposed, Dax")
+boxplot(trial.3[2], main = "Occupied, Dax To")
+boxplot(trial.4[2], main = "Occupied, Dax")
 par(op)
 
 
@@ -170,7 +228,7 @@ summary(warmup.data)
 duration.minutes <- I((warmup.data$Duration/1000)/60)
 
 # Initializing the data frame with converted units
-participant.warmup <- cbind(demonstration.data[1:4], duration.minutes)
+participant.warmup <- cbind(warmup.data[1:4], duration.minutes)
 
 # Between Hand Conditions
 
@@ -185,17 +243,17 @@ warmup.oc <- subset(participant.warmup, Hands == "Occupied", select = c(Particip
 x11()
 op <- par(mfrow = c(1,2))
 plot(warmup.ex, type = "p", main = "Warm-Up Duration - Hands Exposed", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 20))
-     mdex <- mean(duration.minutes)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 20))
+mdex <- mean(duration.minutes)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(warmup.oc, type = "p", main = "Warm-Up Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 20))     
-     mdoc <- mean(duration.minutes) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 20))     
+mdoc <- mean(duration.minutes) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 # Between Language Conditions
@@ -211,17 +269,17 @@ warmup.out <- subset(participant.warmup, Language == "Dax", select = c(Participa
 x11()
 op <- par(mfrow = c(1,2))
 plot(warmup.man, type = "p", main = "Warm-Up Duration - Manner", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 20))
-     mdex <- mean(duration.minutes)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 20))
+mdex <- mean(duration.minutes)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(warmup.out, type = "p", main = "Warm-Up Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 20))     
-     mdoc <- mean(duration.minutes) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 20))     
+mdoc <- mean(duration.minutes) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 # Between All Conditions
@@ -259,61 +317,61 @@ participant.demonstration <- cbind(demonstration.data[1:4], duration.seconds)
 x11()
 plot(participant.demonstration [c (1,5)], type = "p", 
      main = "Demonstration Duration", xlab = "Participant", ylab = "Duration (s)")
-     md <- mean(duration.seconds)
-     h <- abline(h = md, col = "red")
+md <- mean(duration.seconds)
+h <- abline(h = md, col = "red")
 
 # Between Hand Conditions
 
 # Subset paricipants in the Hands Exposed Condtion
 demo.ex <- subset(participant.demonstration, Hands == "Exposed", select = c(Participant, duration.seconds))
-     
+
 # Subset participants in the Hands Occupied Condition
 demo.oc <- subset(participant.demonstration, Hands == "Occupied", select = c(Participant, duration.seconds))
-     
+
 # Plot the two side-by-side
-     
+
 x11()
 op <- par(mfrow = c(1,2))
 plot(demo.ex, type = "p", main = "Demonstration Duration - Hands Exposed", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(30 , 60, by = 5))
-     mdex <- mean(duration.seconds)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(30 , 60, by = 5))
+mdex <- mean(duration.seconds)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(demo.oc, type = "p", main = "Demonstration Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(30 , 60, by = 5))     
-     mdoc <- mean(duration.seconds) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
-     par(op)
-     
-     
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(30 , 60, by = 5))     
+mdoc <- mean(duration.seconds) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
+par(op)
+
+
 # Between Language Conditions
 
 # Subset paricipants in the Manner Condtion
 demo.man <- subset(participant.demonstration, Language == "Dax To", select = c(Participant, duration.seconds))
-     
+
 # Subset participants in the Outcome Condition
 demo.out <- subset(participant.demonstration, Language == "Dax", select = c(Participant, duration.seconds))
-     
+
 x11()
 op <- par(mfrow = c(1,2))
 plot(demo.man, type = "p", main = "Demonstration Duration - Manner", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(30 , 60, by = 5))
-     mdex <- mean(duration.seconds)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(30 , 60, by = 5))
+mdex <- mean(duration.seconds)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(demo.out, type = "p", main = "Demonstration Duration - Outcome", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(30 , 60, by = 5))     
-     mdoc <- mean(duration.seconds) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(30 , 60, by = 5))     
+mdoc <- mean(duration.seconds) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
-     
-     
+
+
 # Between All Conditions
 
 # Subsetting 
@@ -348,8 +406,8 @@ participant.frw <- cbind(frw.data[1:4], duration.seconds)
 x11()
 plot(participant.frw [c (1,5)], type = "p", 
      main = "First Response Window Duration", xlab = "Participant", ylab = "Duration (s)")
-     md <- mean(duration.seconds)
-     abline(h = md, col = "red")
+md <- mean(duration.seconds)
+abline(h = md, col = "red")
 
 # Between Hand Conditions
 
@@ -364,17 +422,17 @@ frw.oc <- subset(participant.frw, Hands == "Occupied", select = c(Participant, d
 x11()
 op <- par(mfrow = c(1,2))
 plot(frw.ex, type = "p", main = "First Response Window Duration - Hands Exposed", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 40, by = 5))
-     mdex <- mean(duration.seconds)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .4, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 40, by = 5))
+mdex <- mean(duration.seconds)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .4, col = "red") 
 plot(frw.oc, type = "p", main = "First Response Window Duration - Hands Occupied", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0 , 40, by = 5))     
-     mdoc <- mean(duration.seconds) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .4, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0 , 40, by = 5))     
+mdoc <- mean(duration.seconds) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .4, col = "red") 
 par(op)
 
 
@@ -389,17 +447,17 @@ frw.out <- subset(participant.frw, Language == "Dax", select = c(Participant, du
 x11()
 op <- par(mfrow = c(1,2))
 plot(frw.man, type = "p", main = "First Response Window Duration - Manner", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 40, by = 5))
-     mdex <- mean(duration.seconds)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 40, by = 5))
+mdex <- mean(duration.seconds)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(frw.out, type = "p", main = "First Response Window Duration - Outcome", cex.main =.8, xlab = "Participants", ylab = " ", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(0, 40, by = 5))     
-     mdoc <- mean(duration.seconds) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(0, 40, by = 5))     
+mdoc <- mean(duration.seconds) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 
@@ -438,9 +496,9 @@ participant.exploration <- cbind(exploration.data[1:4], duration.seconds)
 x11()
 plot(participant.exploration [c (1,5)], type = "p", 
      main = "Exploration Duration", xlab = "Participant", ylab = "Duration (s)")
-     md <- mean(duration.seconds)
-     h <- abline(h = md, col = "red")
-     text(3.5,76, "Average Exploration = 74 seconds", cex = .6, font = 2, col = "red")
+md <- mean(duration.seconds)
+h <- abline(h = md, col = "red")
+text(3.5,76, "Average Exploration = 74 seconds", cex = .6, font = 2, col = "red")
 
 # Between Hand Conditions
 
@@ -456,18 +514,18 @@ x11()
 op <- par(mfrow = c(1,2))
 plot(exploration.ex, type = "p", 
      main = "Exploration Duration - Hands Exposed", cex.main = .8, xlab = "Participants", ylab = "Duration (s)", axes = FALSE)
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(40 , 100, by = 10))
-     mdex <- mean(duration.seconds)
-     abline(h = mdex, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(40 , 100, by = 10))
+mdex <- mean(duration.seconds)
+abline(h = mdex, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 plot(exploration.oc, type = "p", 
      main = "Exploration Duration - Hands Occupied", cex.main =.8, xlab = "Participant", axes = FALSE) 
-     axis(1, lab = FALSE)
-     axis(2, las = 1, at = seq(40 , 100, by = 10))     
-     mdoc <- mean(duration.seconds) 
-     abline(h = mdoc, col = "red") 
-     text(2,80, "mean = X seconds", cex = .6, col = "red") 
+axis(1, lab = FALSE)
+axis(2, las = 1, at = seq(40 , 100, by = 10))     
+mdoc <- mean(duration.seconds) 
+abline(h = mdoc, col = "red") 
+text(2,80, "mean = X seconds", cex = .6, col = "red") 
 par(op)
 
 
@@ -485,14 +543,14 @@ x11()
 op <- par(mfrow = c(1,2))
 plot(exploration.man, type = "b", 
      main = "Exploration Duration - Manner", cex.main = .8, xlab = "Participant", ylab = "Duration (s)")
-     mdman <- mean(duration.seconds)
-     abline(h = mdman, col = "red")
-     text(2,80, "mean = X seconds", cex = .6, col = "red")
+mdman <- mean(duration.seconds)
+abline(h = mdman, col = "red")
+text(2,80, "mean = X seconds", cex = .6, col = "red")
 plot(exploration.out, type = "b", 
      main = "Exploration Duration - Outcome", cex.main =.8, xlab = "Participant", ylab = "Duration (s)")
-     mdout <- mean(duration.seconds)
-     abline(h = mdout, col = "red")
-     text(2,80, "mean = X seconds", cex = .6, col = "red")
+mdout <- mean(duration.seconds)
+abline(h = mdout, col = "red")
+text(2,80, "mean = X seconds", cex = .6, col = "red")
 par(op)
 
 
@@ -514,14 +572,47 @@ boxplot(exp.4[2], main = "Occupied, Dax")
 par(op)
 
 
+## (Basic) First Response Descriptives ----------------------------------------
+
+# All conditions 
+
+head.touches <- as.data.frame(subset(mydata, Response..First.Action. == "Head", select = c(Participant.., Lang.Condition, Action.Condition)))
+hand.touches <- as.data.frame(subset(mydata, Response..First.Action. == "Hand", select = c(Participant.., Lang.Condition, Action.Condition)))
+
+summary(head.touches)  ## seems to be trending in the opposite direction as predicted
+summary(hand.touches)  ## also seems to be trending in the opposite direction as predicted
+
+# By Hands 
+
+response.exposed <- subset(mydata, Action.Condition == "Hands Free" , select = c(Participant.., Response..First.Action.))
+response.occupied <- subset(mydata, Action.Condition == "Hands Occupied" , select = c(Participant.., Response..First.Action.))
+
+#### kick out NAs?
+
+# PLOT THEM
+
+
+# By Language
+
+response.manner <- subset(mydata, Lang.Condition == "Dax to toy" , select = c(Participant.., Response..First.Action.))
+response.outcome <- subset(mydata, Lang.Condition == "Dax toy" , select = c(Participant.., Response..First.Action.))
+
+
+
+# Per condition
+
+
 
 
 ## Things to add: 
 ## 1) First Response Descriptives
-## 2) Interactions
-## 3) ? 
+## 2) Logistic Regression
+## 3) Interactions
+## 4) ? 
 
 detach(alldata)
+
+
 
 
 
