@@ -2,7 +2,7 @@
 ## Honors Thesis in Psychology: Mind, Brain, Behavior
 ## Harvard University, Class of 2016
 
-# This code is ONLY Exploration of Experiment 2: 
+# This code is ONLY Descriptives of Experiment 2: 
   # Participants
   # Durations
   # First Contact (no stats)
@@ -719,6 +719,8 @@ Head.Touches
 unique.head.counts
 
 # Add column with head touch counts (V1)
+
+n <- dim(unique.head.counts)[1]
 
 for (i in 1:n) {
   unique.head.counts$Head.Touches <- Head.Touches

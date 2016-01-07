@@ -14,10 +14,20 @@
 # (4) Graph! 
 
 
-# Load in the relevant data sets (MUST SOURCE THROUGH DESCRIPTIVES FIRST) ----
 
+#Read in and merge individual data sets ----
 
-# Exploration Data 
+load_data <- function(path) { 
+  files <- dir(path, pattern = '\\.csv', full.names = TRUE)
+  tables <- lapply(files, read.csv)
+  do.call(rbind, tables)
+}
+
+alldata <- load_data("Headbop Coded CSVs")
+
+head(alldata)
+
+# Heavy-duty data cleaning ----
 
 # Add in response counts 
 
@@ -29,6 +39,8 @@ Head.Touches
 unique.head.counts
 
 # Add column with head touch counts (V1)
+
+n <- dim(unique.head.counts)[1]
 
 for (i in 1:n) {
   unique.head.counts$Head.Touches <- Head.Touches
@@ -76,19 +88,18 @@ clean.exploration <- cbind(raw.unique.participants2, merged.head.touches$Head.To
 colnames(clean.exploration) = c("Participant", "Condition", "Hands", "Language", "Head Touches", "Hand Touches")
 clean.exploration 
 
-# kick out any participants who did not explore ----
-
-clean.exploration <- clean.exploration[clean.exploration$Total.Responses > 0,]
-
-### HEAD TOUCHES ---------------
-
-# (1) 
-
 # create column of total # of responses, add it to 'clean.exploration'
 
 Total.Responses <- as.matrix(rowSums(clean.exploration[, c(5,6)]))
 
 clean.exploration <- cbind(clean.exploration, Total.Responses)
+
+# kick out any participants who did not explore 
+
+clean.exploration <- clean.exploration[clean.exploration$Total.Responses > 0,]
+
+
+### HEAD TOUCHES ---------------
 
 
 # create vector of proportions, turn them into percentages, name the column, add it to 'clean.exploration'
@@ -128,6 +139,10 @@ require(ggplot2)
 head.dat <- data.frame(
   condition = factor(c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")),
   percent = c(mean.head.1, mean.head.2, mean.head.3, mean.head.4))
+  head.dat$condition <- factor(head.dat$condition, 
+                                levels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"), 
+                                labels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+
 
 ggplot(data = head.dat, aes(x = condition, y = percent)) +
   geom_bar(stat="identity") +
@@ -178,6 +193,10 @@ mean.hand.4 <- colSums(prop.hand.4[3])/(dim(prop.hand.4)[1])
 hand.dat <- data.frame(
   condition = factor(c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")),
   percent = c(mean.hand.1, mean.hand.2, mean.hand.3, mean.hand.4))
+  hand.dat$condition <- factor(hand.dat$condition, 
+                             levels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"), 
+                             labels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+
 
 ggplot(data = hand.dat, aes(x = condition, y = percent)) +
   geom_bar(stat="identity") +
@@ -192,7 +211,7 @@ require(reshape2)
 
 responsedat <- cbind(head.dat, hand.dat[2])
       colnames(responsedat) <- c("Condition", "Head Touches", "Hand Touches") 
-  responsedat$Condition <- factor(responsedat$Condition, 
+      responsedat$Condition <- factor(responsedat$Condition, 
                                 levels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"), 
                                 labels = c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
 
@@ -202,7 +221,7 @@ data.m <- melt(responsedat, id.vars='Condition')
 
 # plot everything
 
-    # Stacked -----
+    # Stacked
 
 plot <- ggplot(data.m, aes(Condition, value)) +   
   geom_bar(aes(fill = variable), position = "stack", stat="identity") +
@@ -211,7 +230,7 @@ plot <- ggplot(data.m, aes(Condition, value)) +
   scale_fill_manual(values=c("deepskyblue3", "chartreuse3")) 
 plot + guides(fill=guide_legend(title=NULL))
 
-    # Grouped -----
+    # Grouped 
 
 plot <- ggplot(data.m, aes(Condition, value)) +   
   geom_bar(aes(fill = variable), position = "dodge", stat="identity") +
@@ -219,6 +238,60 @@ plot <- ggplot(data.m, aes(Condition, value)) +
   theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
   scale_fill_manual(values=c("deepskyblue3", "chartreuse3")) 
 plot + guides(fill=guide_legend(title=NULL))
+
+### CHI SQUARED TEST -----
+
+# re-arranging data to make contingency table
+
+clean.exploration
+
+# create condition labels vector 
+
+Conditions <- c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax") 
+
+# subset head & hand responses by condition 
+
+C1 <- subset(clean.exploration, Condition == "Exposed, Dax To", select = c("Participant", "Condition", "Head Touches", "Hand Touches"))
+C2 <- subset(clean.exploration, Condition == "Exposed, Dax", select = c("Participant", "Condition", "Head Touches", "Hand Touches"))
+C3 <- subset(clean.exploration, Condition == "Occupied, Dax To", select = c("Participant", "Condition", "Head Touches", "Hand Touches"))
+C4 <- subset(clean.exploration, Condition == "Occupied, Dax", select = c("Participant", "Condition", "Head Touches", "Hand Touches"))
+
+# sum head responses per condition 
+
+C1.head.sum <- as.vector(colSums(C1[3]))
+C2.head.sum <- as.vector(colSums(C2[3]))
+C3.head.sum <- as.vector(colSums(C3[3]))
+C4.head.sum <- as.vector(colSums(C4[3]))
+
+head.sums <- as.integer(c(C1.head.sum, C2.head.sum, C3.head.sum, C4.head.sum))
+head.temp <- as.data.frame(head.sums, Conditions)
+
+# sum hand responses per condition 
+
+C1.hand.sum <- as.vector(colSums(C1[4]))
+C2.hand.sum <- as.vector(colSums(C2[4]))
+C3.hand.sum <- as.vector(colSums(C3[4]))
+C4.hand.sum <- as.vector(colSums(C4[4]))
+
+hand.sums <- as.integer(c(C1.hand.sum, C2.hand.sum, C3.hand.sum, C4.hand.sum))
+hand.temp <- as.data.frame(hand.sums, Conditions)
+
+
+
+# merge hand sums, head sums and conditions
+
+raw.contingency <- cbind(head.temp, hand.temp$hand.sums)
+colnames(raw.contingency) <- c("Head Touches", "Hand Touches")
+contingency.table <- raw.contingency
+
+contingency.table
+
+
+### chi-squared = 1.7065, df = 3, p-value = 0.64 
+# cannot reject the null that response type is independent of condition ----
+
+chisq.test(contingency.table)
+
 
 
 
