@@ -292,6 +292,8 @@ contingency.table
 
 chisq.test(contingency.table)
 
+### LOGISTIC REGRESSION ----
+
 
 
 
