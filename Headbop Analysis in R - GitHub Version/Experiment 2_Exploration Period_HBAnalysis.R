@@ -2,6 +2,10 @@
 ## Honors Thesis in Psychology: Mind, Brain, Behavior
 ## Harvard University, Class of 2016
 
+require(plyr)
+require(ggplot2)
+require(reshape2)
+
 
 # ! This code is ONLY descriptives/stats for the exploration period in Experiment 2 !
 
@@ -292,7 +296,17 @@ contingency.table
 
 chisq.test(contingency.table)
 
-### LOGISTIC REGRESSION ----
+
+
+
+#### TESTING NEW WAY TO MAKE CONTINGENCY TABLE 
+
+cont.subset <- NULL
+cont.subset$Condition = as.factor(clean.exploration$Condition)
+cont.subset$Head.Touches = as.integer(clean.exploration$`Head Touches`)
+cont.subset$Hand.Touches = as.integer(clean.exploration$`Hand Touches`)
+cont.subset <- as.data.frame(cont.subset)
+test <- melt(cont.subset)
 
 
 
