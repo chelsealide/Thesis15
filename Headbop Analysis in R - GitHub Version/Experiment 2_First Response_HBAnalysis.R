@@ -15,6 +15,7 @@ raw.data <- read.csv("HBThesis_Data.csv")
 
 mydata <- raw.data[raw.data$Include == 1,]
 mydata <- raw.data[!is.na(raw.data$Has.Exploration.Period),]
+mydata <- raw.data[!is.na(raw.data$Response..First.Action.),]
 attach(mydata)
 
 ### LOGISTIC REGRESSION ----
