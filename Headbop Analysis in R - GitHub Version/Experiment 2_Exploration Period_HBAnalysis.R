@@ -299,17 +299,17 @@ chisq.test(contingency.table)
 
 
 
-#### TESTING NEW WAY TO MAKE CONTINGENCY TABLE 
-
-cont.subset <- NULL
-cont.subset$Condition = as.factor(clean.exploration$Condition)
-cont.subset$Head.Touches = as.integer(clean.exploration$`Head Touches`)
-cont.subset$Hand.Touches = as.integer(clean.exploration$`Hand Touches`)
-cont.subset <- as.data.frame(cont.subset)
-test <- melt(cont.subset)
+#### CONTINGENCY TABLE (ever head touched vs. never)
 
 
+clean.exploration$Ever.Head <- as.factor(ifelse(clean.exploration$"Head Touches" > 0, 1,0))
+clean.exploration
 
+raw.cont <- NULL
+raw.cont$Condition <- as.factor(clean.exploration$Condition)
+raw.cont$Ever.Head <- as.factor(clean.exploration$Ever.Head)
+raw.cont <- as.data.frame(raw.cont)
 
-
+cont.table <- reshape(raw.cont, direction = "wide")
+cont.table
 
