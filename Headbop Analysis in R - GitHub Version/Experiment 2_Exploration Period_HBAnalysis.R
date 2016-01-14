@@ -5,6 +5,7 @@
 require(plyr)
 require(ggplot2)
 require(reshape2)
+require(reshape)
 
 
 # ! This code is ONLY descriptives/stats for the exploration period in Experiment 2 !
@@ -302,14 +303,42 @@ chisq.test(contingency.table)
 #### CONTINGENCY TABLE (ever head touched vs. never)
 
 
-clean.exploration$Ever.Head <- as.factor(ifelse(clean.exploration$"Head Touches" > 0, 1,0))
+clean.exploration$Ever.Head <- as.integer(ifelse(clean.exploration$"Head Touches" > 0, 1,0))
 clean.exploration
 
 raw.cont <- NULL
 raw.cont$Condition <- as.factor(clean.exploration$Condition)
-raw.cont$Ever.Head <- as.factor(clean.exploration$Ever.Head)
+raw.cont$Ever <- as.integer(clean.exploration$Ever.Head)
+raw.cont$Never <- as.integer(ifelse(clean.exploration$Ever.Head == clean.exploration$Ever.Head[1], 0,1))
 raw.cont <- as.data.frame(raw.cont)
 
-cont.table <- reshape(raw.cont, direction = "wide")
-cont.table
+C1 <- subset(raw.cont, Condition == "Exposed, Dax To", select = c("Ever", "Never"))
+C2 <- subset(raw.cont, Condition == "Exposed, Dax", select = c("Ever", "Never"))
+C3 <- subset(raw.cont, Condition == "Occupied, Dax To", select = c("Ever", "Never"))
+C4 <- subset(raw.cont, Condition == "Occupied, Dax", select = c("Ever", "Never"))
+
+C1.ever.sum <- as.vector(colSums(C1[1]))
+C2.ever.sum <- as.vector(colSums(C2[1]))
+C3.ever.sum <- as.vector(colSums(C3[1]))
+C4.ever.sum <- as.vector(colSums(C4[1]))
+
+C1.never.sum <- as.vector(colSums(C1[2]))
+C2.never.sum <- as.vector(colSums(C2[2]))
+C3.never.sum <- as.vector(colSums(C3[2]))
+C4.never.sum <- as.vector(colSums(C4[2]))
+
+cont.table <- NULL 
+cont.table$Ever <- as.integer(c(C1.ever.sum, C2.ever.sum, C3.ever.sum, C4.ever.sum))
+cont.table$Never <- as.integer(c(C1.never.sum, C2.never.sum, C3.never.sum, C4.never.sum))
+cont.table <- as.data.frame(cont.table)
+rownames(cont.table) <- c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")
+cont.table 
+
+## Statistic ----
+
+exploration.chi <- chisq.test(cont.table)
+
+### chi-squared = .170, df = 3, p-value = 0.98 
+# cannot reject the null that response type is independent of condition ----
+
 
