@@ -342,3 +342,29 @@ exploration.chi <- chisq.test(cont.table)
 # cannot reject the null that response type is independent of condition ----
 
 
+
+### Percentage of Head Touches (ever) per condition (like Schwier et al., 2006) ---- 
+
+# start with clean.exploration & binary column of Ever.Head
+
+# subset condition (as factor) and Ever.Head
+
+Ever.Head1 <- subset(clean.exploration, Condition == "Exposed, Dax To", c("Participant", "Condition", "Ever.Head"))
+Ever.Head2 <- subset(clean.exploration, Condition == "Exposed, Dax", c("Participant", "Condition", "Ever.Head"))
+Ever.Head3 <- subset(clean.exploration, Condition == "Occupied, Dax To", c("Participant", "Condition", "Ever.Head"))
+Ever.Head4 <- subset(clean.exploration, Condition == "Occupied, Dax", c("Participant", "Condition", "Ever.Head"))
+
+C1mean <- colMeans(Ever.Head1[3])
+C2mean <- colMeans(Ever.Head2[3])
+C3mean <- colMeans(Ever.Head3[3])
+C4mean <- colMeans(Ever.Head4[3])
+
+ever.head.plot <- NULL 
+ever.head.plot$Condition <- as.factor(c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+ever.head.plot$'Mean Head Touch' <- c(C1mean, C2mean, C3mean, C4mean)  
+ever.head.plot <- as.data.frame(ever.head.plot)
+ever.head.plot
+  
+  
+  
+  
