@@ -28,28 +28,23 @@ subset.null$Response = as.factor(ifelse(mydata$Response..First.Action. == mydata
 
 # Convert to dataframe 
 
-Exp.2.log <- as.data.frame(subset.null)
+Exp.2 <- as.data.frame(subset.null)
 
 
-### DESCRIPTIVES ----
+### Graph ----
 
 require(ggplot2)
 
-
-p <- ggplot(data=Exp.2.log, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + ylab("Proportion of Responses") + 
+Exp.2$Response <- factor(Exp.2$Response, levels = rev(levels(Exp.2$Response)))
+p <- ggplot(data=Exp.2, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + ylab("Proportion of Responses") + 
   labs(fill="Response") + ggtitle("First Response Action") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
-  p + scale_fill_manual(values=c("chartreuse3", "deepskyblue3"), 
+  p + scale_fill_manual(values=c("deepskyblue3","chartreuse3"), 
                         breaks=c("1", "0"),
                         labels=c("Head Touch", "Hand Touch"))
   
 
-### LOGISTIC REGRESSION ----
 
-# Run the statistic 
+### Planned Comparisons ----
 
-
-logfit = glm(Response ~ ., family = binomial(logit), data = Exp.2.log)
-summary(logfit)
-
-
+  
 
