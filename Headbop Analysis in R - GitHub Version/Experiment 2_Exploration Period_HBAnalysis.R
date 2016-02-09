@@ -6,7 +6,7 @@ require(plyr)
 require(ggplot2)
 require(reshape2)
 require(reshape)
-
+require(gridExtra)
 
 # ! This code is ONLY descriptives/stats for the exploration period in Experiment 2 !
 
@@ -103,6 +103,51 @@ clean.exploration <- cbind(clean.exploration, Total.Responses)
 
 clean.exploration <- clean.exploration[clean.exploration$Total.Responses > 0,]
 
+attach(clean.exploration)
+
+### Distribution of Response Types ----
+
+# Head Touches per condition 
+
+head <- ggplot(clean.exploration, aes(x=`Head Touches`, fill=Condition)) + geom_density(alpha=.3) +
+  scale_fill_discrete(name="Experimental\nCondition",
+                        breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
+                        labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")) + 
+                        facet_grid(cond ~ .)
+
+# Hand Touches per condition 
+
+hands <- ggplot(clean.exploration, aes(x=`Hand Touches`, fill=Condition)) + geom_density(alpha=.3) +
+  scale_fill_discrete(name="Experimental\nCondition",
+                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
+                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+
+multiplot(head, hands, cols = 2)
+                      
+### Model Fitting (Head Touches) ----
+
+null.fit <- aov(`Head Touches` ~ Hands, data = clean.exploration)
+
+fit.1 <- aov(`Head Touches` ~ Hands + Language, data = clean.exploration)
+
+fit.2 <- aov(`Head Touches`~ Hands*Language, data = clean.exploration)
+
+head.comparison <- anova(null.fit,fit.1, fit.2)
+head.comparison 
+
+### Model Fitting (Hand Touches) ----
+
+null.fit <- aov(`Hand Touches` ~ Hands, data = clean.exploration)
+
+fit.1 <- aov(`Hand Touches` ~ Hands + Language, data = clean.exploration)
+
+fit.2 <- aov(`Hand Touches`~ Hands*Language, data = clean.exploration)
+
+hand.comparison <- anova(null.fit,fit.1, fit.2)
+hand.comparison 
+
+
+### Below = proportions ----
 
 ### HEAD TOUCHES ---------------
 
@@ -368,3 +413,8 @@ ever.head.plot
   
   
   
+
+
+
+
+
