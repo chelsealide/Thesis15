@@ -109,43 +109,63 @@ attach(clean.exploration)
 
 # Head Touches per condition 
 
-head <- ggplot(clean.exploration, aes(x=`Head Touches`, fill=Condition)) + geom_density(alpha=.3) +
+ggplot(clean.exploration, aes(x=`Head Touches`, fill=Condition)) + geom_density(alpha=.3) +
   scale_fill_discrete(name="Experimental\nCondition",
                         breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                        labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")) + 
-                        facet_grid(cond ~ .)
+                        labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
 
 # Hand Touches per condition 
 
-hands <- ggplot(clean.exploration, aes(x=`Hand Touches`, fill=Condition)) + geom_density(alpha=.3) +
+ggplot(clean.exploration, aes(x=`Hand Touches`, fill=Condition)) + geom_density(alpha=.3) +
   scale_fill_discrete(name="Experimental\nCondition",
                       breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
                       labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
 
-multiplot(head, hands, cols = 2)
+
                       
 ### Model Fitting (Head Touches) ----
 
-null.fit <- aov(`Head Touches` ~ Hands, data = clean.exploration)
+temp.data <- clean.exploration[clean.exploration$`Head Touches` > 0,]   # To get rid of non-positive values (which cause error term for gamma dist)
 
-fit.1 <- aov(`Head Touches` ~ Hands + Language, data = clean.exploration)
+null.fit <- glm(`Head Touches` ~ Hands, family = Gamma, data = temp.data)
 
-fit.2 <- aov(`Head Touches`~ Hands*Language, data = clean.exploration)
+fit.1 <- glm(`Head Touches` ~ Hands + Language, family = Gamma, data = temp.data)
+
+fit.2 <- glm(`Head Touches`~ Hands*Language, family = Gamma, data = temp.data)
 
 head.comparison <- anova(null.fit,fit.1, fit.2)
 head.comparison 
 
 ### Model Fitting (Hand Touches) ----
 
-null.fit <- aov(`Hand Touches` ~ Hands, data = clean.exploration)
+fit.null <- glm(`Hand Touches` ~ Hands, family = Gamma, data = temp.data)
 
-fit.1 <- aov(`Hand Touches` ~ Hands + Language, data = clean.exploration)
+fit.a <- glm(`Hand Touches` ~ Hands + Language, family = Gamma, data = temp.data)
 
-fit.2 <- aov(`Hand Touches`~ Hands*Language, data = clean.exploration)
+fit.a <- glm(`Hand Touches`~ Hands*Language, family = Gamma, data = temp.data)
 
-hand.comparison <- anova(null.fit,fit.1, fit.2)
+hand.comparison <- anova(fit.null,fit.a, fit.b)
 hand.comparison 
 
+### Fit 1 ( Hands + Lang ) predicts BOTH head (p = .05) and hand (p = .01) touch responses significanly better than the null fit ----
+
+
+### Exploration Language Effects ---- 
+
+
+op <- par(mfrow = c(1,2))
+boxplot(`Head Touches`~Language, data = clean.exploration)
+boxplot(`Hand Touches`~Language, data = clean.exploration)
+par(op)
+
+# T Tests...
+
+q <- subset(clean.exploration, `Head Touches` > 0, c("Language", "Head Touches"))
+z <- subset(clean.exploration, `Hand Touches` > 0, c("Language", "Hand Touches"))
+t.test(`Head Touches`~Language, data = q)
+t.test(`Hand Touches`~Language, data = z)
+
+pairs(clean.exploration)
 
 ### Below = proportions ----
 
