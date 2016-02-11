@@ -167,7 +167,18 @@ t.test(`Hand Touches`~Language, data = z)
 
 pairs(clean.exploration)
 
-### Below = proportions ----
+
+
+
+### Below = proportions --------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 ### HEAD TOUCHES ---------------
 

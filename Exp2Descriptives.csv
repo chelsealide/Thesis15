@@ -1,0 +1,46 @@
+Subject,Participant,Condition,Language,Hands,Gender,Days Old,MCDI
+H56,1,"Exposed, Dax To",Dax To,Exposed,F,545,1
+H57,2,"Exposed, Dax To",Dax To,Exposed,M,534,10
+H58,3,"Exposed, Dax To",Dax To,Exposed,M,526,20
+H62,4,"Exposed, Dax To",Dax To,Exposed,F,541,19
+H63,5,"Exposed, Dax To",Dax To,Exposed,M,527,68
+H64,6,"Exposed, Dax To",Dax To,Exposed,M,527,8
+H65,7,"Exposed, Dax To",Dax To,Exposed,M,572,18
+H66,8,"Exposed, Dax To",Dax To,Exposed,M,556,5
+H67,9,"Exposed, Dax To",Dax To,Exposed,F,570,7
+H68,10,"Exposed, Dax To",Dax To,Exposed,F,567,21
+H69,11,"Exposed, Dax",Dax,Exposed,M,547,37
+H70 ,12,"Exposed, Dax",Dax,Exposed,M,532,2
+H71,13,"Occupied, Dax",Dax,Occupied,F,526,4
+H73,14,"Occupied, Dax",Dax,Occupied,M,566,2
+H74,15,"Occupied, Dax",Dax,Occupied,F,545,7
+H75,16,"Occupied, Dax",Dax,Occupied,F,531,16
+H76,17,"Occupied, Dax",Dax,Occupied,F,525,17
+H77,18,"Exposed, Dax",Dax,Exposed,F,561,16
+H78,19,"Occupied, Dax",Dax,Occupied,M,578,25
+H79,20,"Occupied, Dax",Dax,Occupied,F,568,16
+H80,21,"Exposed, Dax",Dax,Exposed,F,536,0
+H81,22,"Occupied, Dax To",Dax To,Occupied,M,550,8
+H82,23,"Occupied, Dax To",Dax To,Occupied,M,542,11
+H83,24,"Occupied, Dax To",Dax To,Occupied,M,552,6
+H84,25,"Occupied, Dax To",Dax To,Occupied,M,575,31
+H85,26,"Occupied, Dax To",Dax To,Occupied,M,541,3
+H86,27,"Exposed, Dax To",Dax,Exposed,M,522,5
+H87,28,"Occupied, Dax",Dax,Occupied,M,555,5
+H88,29,"Exposed, Dax",Dax,Exposed,M,555,7
+H89,30,"Exposed, Dax",Dax,Exposed,M,551,25
+H90,31,"Occupied, Dax To",Dax To,Occupied,F,562,0
+H91,32,"Occupied, Dax To",Dax To,Occupied,F,523,46
+H92,33,"Exposed, Dax",Dax,Exposed,F,535,4
+H93,34,"Occupied, Dax",Dax,Occupied,M,559,24
+H94,35,"Occupied, Dax To",Dax To,Occupied,F,528,8
+H95,36,"Occupied, Dax To",Dax To,Occupied,M,564,2
+H96,37,"Exposed, Dax To",Dax To,Exposed,M ,563,58
+H97,38,"Occupied, Dax To",Dax To,Occupied,F,537,18
+H98,39,"Exposed, Dax",Dax,Exposed,M,567,3
+H99,40,"Exposed, Dax",Dax,Exposed,M,529,14
+H100,41,"Exposed, Dax To",Dax To,Exposed,F,524,9
+H101,42,"Exposed, Dax",Dax,Exposed,F,542,8
+H102,43,"Occupied, Dax To",Dax To,Occupied,M,529,8
+H103,44,"Occupied, Dax",Dax,Occupied,M,528,10
+H104,45,"Occupied, Dax To",Dax To,Occupied,F,533,11
