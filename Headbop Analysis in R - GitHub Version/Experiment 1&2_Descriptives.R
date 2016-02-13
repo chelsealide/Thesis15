@@ -40,7 +40,7 @@ attach(mydata)
   
  # Vocab & Age
   
-  ggplot(mydata, aes(x=Days.Old, y=Raw.MCDI..Harvard.Only., color=Condition)) + geom_point(size=5) + xlab("Age (days)") + ylab("Score")
+  ggplot(mydata, aes(x=Days.Old, y=Raw.MCDI..Harvard.Only., color=Condition)) + geom_point(size=5) + geom_smooth(method=lm, se=FALSE) + xlab("Age (days)") + ylab("Score")
   
   # Gender & Condition
   
@@ -107,6 +107,8 @@ attach(mydata)
   
 detach(mydata)
 
+        
+        
 ### Load data for Experiment 2 ----
 
 load_data <- function(path) { 
