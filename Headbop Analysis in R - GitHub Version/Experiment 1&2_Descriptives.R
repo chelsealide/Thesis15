@@ -12,7 +12,13 @@ require(corrplot)
 ### Load data for Experiment 1 ----
 
 
+raw.data <- read.csv("Experiment1Data.csv")
 
+# Kick out excluded participants 
+
+mydata <- raw.data[raw.data$Include == 1,]
+
+# Data visualization 
 
 
 
