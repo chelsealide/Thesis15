@@ -9,7 +9,7 @@
 
 # Load in data set & kick out excluded participants ----
 
-raw.data <- read.csv("HBThesis_Data.csv")
+raw.data <- read.csv("Experiment2Data.csv")
 
 mydata <- raw.data[raw.data$Include == 1,]
 mydata <- raw.data[!is.na(raw.data$Has.Exploration.Period),]
