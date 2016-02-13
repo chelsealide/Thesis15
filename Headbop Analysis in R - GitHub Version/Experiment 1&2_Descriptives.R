@@ -20,7 +20,7 @@ mydata <- raw.data[raw.data$Include == 1,]
 mydata$Months.Old <- I(mydata$Days.Old/30)
 attach(mydata)
 
-# Data visualization 
+# Data visualization ----
 
   # Age & Gender 
 
@@ -32,14 +32,80 @@ attach(mydata)
   
   # Vocab & Gender 
 
-  p <- ggplot(mydata, aes(factor(Gender), Raw.MCDI..Harvard.Only.), xlab = "Gender", ylab = "Vocabulary Score")  
+  p <- ggplot(mydata, aes(factor(Gender), Raw.MCDI..Harvard.Only.), xlab = "Gender", ylab = "Score")  
   p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
         labs(x = "Gender", 
          y = "Vocabulary Score",
          title = "Vocabulary Differences by Gender")
+  
+ # Vocab & Age
+  
+  ggplot(mydata, aes(x=Days.Old, y=Raw.MCDI..Harvard.Only., color=Condition)) + geom_point(size=5) + xlab("Age (days)") + ylab("Score")
+  
+  # Gender & Condition
+  
+  ggplot(data=mydata, aes(x=Condition, fill=Gender)) +
+    geom_bar(stat="bin") + scale_fill_manual(values=c("lightcoral", "darkslategray3")) + ggtitle("Gender Distribution per Condition") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
+    
+  
+  # Age & Condition
+  
+  #(density) 
+  ggplot(mydata, aes(x=Days.Old, fill=Condition)) + geom_density(alpha = .5) 
+  
+  #(boxplot)
+  p <- ggplot(mydata, aes(factor(Condition), Days.Old)) 
+  p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+    labs(x = "Condition", 
+         y = "Age (days)",
+         title = "Age Distribution by Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1))
+  
+  # Vocab & Condition
+  
+  #(density)
+  ggplot(mydata, aes(x=Raw.MCDI..Harvard.Only., fill=Condition)) + geom_density(alpha = .5)
+  
+  #(boxplot)
+  p <- ggplot(mydata, aes(factor(Condition), Raw.MCDI..Harvard.Only.)) 
+  p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+    labs(x = "Condition", 
+         y = "Score",
+         title = "Vocabulary Distribution by Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1))
+  
 
+  
 
+ 
 
+# Stats ----
+  
+  # Per age ...
+  
+        # vocab (r^2)++++
+        cor.test(Days.Old, Raw.MCDI..Harvard.Only.) # R^2= .46, p = .03 (trending) 
+  
+  # Per Gender ...
+  
+        # age (t)
+        t.test(Days.Old~Gender) # t = 0.28, p = 0.78
+  
+        # vocab (t)
+        t.test(Raw.MCDI..Harvard.Only.~Gender) # t = 0.50, p = 0.62
+  
+  # Per Cond ...
+  
+        # gender (t) 
+        
+        # age (t)
+        t.test(Days.Old~Action.Condition)  # t = -1.64, p = 0.13
+        
+        # vocab (t)
+        fit1 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition)
+        fit2 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition*Action.Condition)  # F = .26, p = .76
+        anova(fit1, fit2)
+  
+  
+detach(mydata)
 
 ### Load data for Experiment 2 ----
 
