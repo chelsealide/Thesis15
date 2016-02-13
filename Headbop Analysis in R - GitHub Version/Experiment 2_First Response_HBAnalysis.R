@@ -37,7 +37,7 @@ require(ggplot2)
 
 Exp.2$Response <- factor(Exp.2$Response, levels = rev(levels(Exp.2$Response)))
 p <- ggplot(data=Exp.2, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + ylab("Proportion of Responses") + 
-  labs(fill="Response") + ggtitle("First Response Action") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
+  labs(fill="Response Type") + ggtitle("First Response Action") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
   p + scale_fill_manual(values=c("deepskyblue3","chartreuse3"), 
                         breaks=c("1", "0"),
                         labels=c("Head Touch", "Hand Touch"))
