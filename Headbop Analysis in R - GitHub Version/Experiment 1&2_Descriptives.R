@@ -110,8 +110,20 @@ detach(mydata)
         
         
         
+### Exp 1 & 2 Fuss&Fail Comparison ----
         
+  # Exp 1 fuss outs = 0/20
+  # Exp 1 fail to intract w toy = 5/20
+  # Exp 2 fuss outs = 5/45
+  # Exp 2 fail to intract w toy = 3/45
         
+  ff <- read.csv("FussFail.csv")
+  ff$Experiment <- as.factor(ff$Experiment)
+  mylogit <- glm(Fuss.or.Fail~Experiment, data = ff, family = "binomial")
+  summary(mylogit) 
+  
+  
+  
 ### Load data for Experiment 2 ----
 
 load_data <- function(path) { 
