@@ -27,7 +27,7 @@ attach(mydata)
   p <- ggplot(mydata, aes(factor(Gender), Months.Old, xlab = "Gender", ylab = "Age (days)")) 
   p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
         labs(x = "Gender", 
-        y = "Age (days)",
+        y = "Age (months)",
         title = "Age Differences by Gender")
   
   # Vocab & Gender 
@@ -73,9 +73,7 @@ attach(mydata)
          title = "Vocabulary Distribution by Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1))
   
 
-  
 
- 
 
 # Stats ----
   
@@ -107,6 +105,11 @@ attach(mydata)
   
 detach(mydata)
 
+        
+        
+        
+        
+        
         
         
 ### Load data for Experiment 2 ----

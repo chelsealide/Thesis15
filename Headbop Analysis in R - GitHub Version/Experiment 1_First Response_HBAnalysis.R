@@ -36,3 +36,12 @@ p <- ggplot(data=Exp.1, aes(x=Condition, fill=Response)) + geom_bar(position="fi
 p + scale_fill_manual(values=c("deepskyblue3","chartreuse3"), 
                       breaks=c("1", "0"),
                       labels=c("Head Touch", "Hand Touch"))
+
+
+### Location of First Response (Globe, Button, Neither)
+
+ggplot(data=mydata, aes(x=Response.Location)) +
+  geom_bar(stat="bin") + xlab(NULL) + ggtitle("Location of First Response Imitation") +
+  theme(plot.title = element_text(size=15, face="bold"))
+ 
+
