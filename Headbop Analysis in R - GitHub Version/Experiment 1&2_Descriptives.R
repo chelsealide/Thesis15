@@ -20,6 +20,7 @@ mydata <- raw.data[raw.data$Include == 1,]
 mydata$Months.Old <- I(mydata$Days.Old/30)
 attach(mydata)
 
+
 # Data visualization ----
 
   # Age & Gender 
@@ -74,7 +75,6 @@ attach(mydata)
   
 
 
-
 # Stats ----
   
   # Per age ...
@@ -109,7 +109,6 @@ detach(mydata)
         
         
         
-        
 ### Exp 1 & 2 Fuss&Fail Comparison ----
         
   # Exp 1 fuss outs = 0/20
@@ -121,6 +120,7 @@ detach(mydata)
   ff$Experiment <- as.factor(ff$Experiment)
   mylogit <- glm(Fuss.or.Fail~Experiment, data = ff, family = "binomial")
   summary(mylogit) 
+  
   
   
   

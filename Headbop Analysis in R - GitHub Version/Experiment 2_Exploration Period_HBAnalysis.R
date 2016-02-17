@@ -123,17 +123,18 @@ ggplot(clean.exploration, aes(x=`Hand Touches`, fill=Condition)) + geom_density(
 
 
                       
+
 ### Model Fitting (Head Touches) ----
 
 temp.data <- clean.exploration[clean.exploration$`Head Touches` > 0,]   # To get rid of non-positive values (which cause error term for gamma dist)
 
-null.fit <- glm(`Head Touches` ~ Hands, family = Gamma, data = temp.data)
+null.fit <- glm(`Head Touches` ~ 1, family = poisson, data = clean.exploration)
 
-fit.1 <- glm(`Head Touches` ~ Hands + Language, family = Gamma, data = temp.data)
+fit.1 <- glm(`Head Touches` ~ Hands*Language, family = poisson, data = clean.exploration)
 
 fit.2 <- glm(`Head Touches`~ Hands*Language, family = Gamma, data = temp.data)
 
-head.comparison <- anova(null.fit,fit.1, fit.2)
+head.comparison <- anova(null.fit,fit.1, test = "Chisq")
 head.comparison 
 
 ### Model Fitting (Hand Touches) ----
@@ -180,7 +181,7 @@ pairs(clean.exploration)
 
 
 
-### HEAD TOUCHES ---------------
+### HEAD TOUCHES
 
 
 # create vector of proportions, turn them into percentages, name the column, add it to 'clean.exploration'
@@ -232,7 +233,7 @@ ggplot(data = head.dat, aes(x = condition, y = percent)) +
 
 detach(clean.exploration)
 
-### HAND TOUCHES -------------
+### HAND TOUCHES 
 
 # (1) 
 
@@ -284,7 +285,7 @@ ggplot(data = hand.dat, aes(x = condition, y = percent)) +
   xlab("Condition") + ylab("Percent") + 
   ggtitle("Percentage of Hand Touch Responses Per Condition")
 
-### GRAPHING -----------------
+### GRAPHING 
 
 require(reshape2)
 
@@ -320,7 +321,7 @@ plot <- ggplot(data.m, aes(Condition, value)) +
   scale_fill_manual(values=c("deepskyblue3", "chartreuse3")) 
 plot + guides(fill=guide_legend(title=NULL))
 
-### CHI SQUARED TEST -----
+### CHI SQUARED TEST 
 
 # re-arranging data to make contingency table
 
@@ -369,7 +370,7 @@ contingency.table
 
 
 ### chi-squared = 1.7065, df = 3, p-value = 0.64 
-# cannot reject the null that response type is independent of condition ----
+# cannot reject the null that response type is independent of condition
 
 chisq.test(contingency.table)
 
@@ -410,16 +411,16 @@ cont.table <- as.data.frame(cont.table)
 rownames(cont.table) <- c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax")
 cont.table 
 
-## Statistic ----
+## Statistic 
 
 exploration.chi <- chisq.test(cont.table)
 
 ### chi-squared = .170, df = 3, p-value = 0.98 
-# cannot reject the null that response type is independent of condition ----
+# cannot reject the null that response type is independent of condition 
 
 
 
-### Percentage of Head Touches (ever) per condition (like Schwier et al., 2006) ---- 
+### Percentage of Head Touches (ever) per condition (like Schwier et al., 2006)  
 
 # start with clean.exploration & binary column of Ever.Head
 
