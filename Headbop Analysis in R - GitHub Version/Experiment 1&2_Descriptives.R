@@ -80,26 +80,26 @@ attach(mydata)
   # Per age ...
   
         # vocab (r^2)++++
-        cor.test(Days.Old, Raw.MCDI..Harvard.Only.) # R^2= .46, p = .03 (trending) 
+        cor.test(Days.Old, Raw.MCDI..Harvard.Only.) # R^2= .44, df = 17, p = .05 (trending) 
   
   # Per Gender ...
   
         # age (t)
-        t.test(Days.Old~Gender) # t = 0.28, p = 0.78
+        t.test(Days.Old~Gender) # t = 0.10, df = 17.96, p = 0.91
   
         # vocab (t)
-        t.test(Raw.MCDI..Harvard.Only.~Gender) # t = 0.50, p = 0.62
+        t.test(Raw.MCDI..Harvard.Only.~Gender) # t = 0.56, df = 16.73, p = 0.58
   
   # Per Cond ...
   
         # gender (t) 
         
         # age (t)
-        t.test(Days.Old~Action.Condition)  # t = -1.64, p = 0.13
+        t.test(Days.Old~Action.Condition)  # t = -1.25, df = 11.93, p = 0.24
         
         # vocab (t)
-        fit1 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition)
-        fit2 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition*Action.Condition)  # F = .26, p = .76
+        fit1 <- lm(Raw.MCDI..Harvard.Only.~1)
+        fit2 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition*Action.Condition)  # F = .12, p = .95
         anova(fit1, fit2)
   
   
@@ -315,66 +315,86 @@ cor(numeric.dat)
 
   # Total
 
-ggplot(descriptives, aes(x=Total.Dur, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), Total.Dur)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "Total Trial Length (s)",
+       title = "Trial Duration by Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
   
   # Warmup 
 
-ggplot(descriptives, aes(x=Warmup.Dur, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), Warmup.Dur)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "Warm-Up Length (s)",
+       title = "Warm-Up Duration by Condition") + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) + 
+  theme(plot.title = element_text(size=15, face="bold"))
+
 
   # Demonstration
 
-ggplot(descriptives, aes(x=Demo.Dur, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), Demo.Dur)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "Demonstration Length (s)",
+       title = "Demonstration Duration by Condition") + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(size=15, face="bold"))
+
 
   # FirstResponse
 
-ggplot(descriptives, aes(x=FirstResponse.Dur, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), FirstResponse.Dur)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "First Response Window Length (s)",
+       title = "First Response Window Duration by Condition") + 
+       theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(size=15, face="bold"))
 
   # Exploration
 
-ggplot(descriptives, aes(x=Exploration.Dur, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), Exploration.Dur)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "Exploration Length (s)",
+       title = "Exploration Duration by Condition") + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(size=15, face="bold"))
+
 
   # Engagement
 
-ggplot(descriptives, aes(x=Engagement.Duration, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
+p <- ggplot(descriptives, aes(factor(Condition), Engagement.Duration)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "Engagement Length (s)",
+       title = "Engagement Duration by Condition") + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(size=15, face="bold"))
 
   # IBA
 
-ggplot(descriptives, aes(x=IBA.Duration, fill=Condition)) + geom_density(alpha=.3) +
-  scale_fill_discrete(name="Condition",
-                      breaks=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"),
-                      labels=c("Exposed, Dax To", "Exposed, Dax", "Occupied, Dax To", "Occupied, Dax"))
-  
+p <- ggplot(descriptives, aes(factor(Condition), IBA.Duration)) 
+p + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+  labs(x = "Condition", 
+       y = "IBA Length (s)",
+       title = "IBA Duration by Condition") + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(size=15, face="bold"))
+
 
 ### No real trends, other than that first response window tending to be shortest in Exposed, Dax To cond ###
 
 
+### Head touches 
 
+hist(descriptives$Head.Touches, breaks = 3)
 
   # Head touches by Gender 
   
-  ggplot(descriptives, aes(x=Head.Touches, fill=Gender)) + geom_density(alpha=.3) +
+  ggplot(descriptives, aes(x=Head.Touches)) + geom_histogram() + facet_grid(Gender ~ .)
     scale_fill_discrete(name="Participant Gender",
                         breaks=c("F", "M"),
                         labels=c("Girls", "Boys"))
-  
+    
   # Head touches by Hands 
   
   ggplot(descriptives, aes(x=Head.Touches, fill=Hands)) + geom_density(alpha=.3) +
@@ -387,6 +407,10 @@ ggplot(descriptives, aes(x=IBA.Duration, fill=Condition)) + geom_density(alpha=.
                         breaks=c("Dax To", "Dax"),
                         labels=c("Manner", "Outcome"), values = c("limegreen","dodgerblue"))
 
+  
+### Hand touches 
+  
+  hist(descriptives$Hand.Touches, breaks = 50)
   
   # Hand touches by Gender
   
