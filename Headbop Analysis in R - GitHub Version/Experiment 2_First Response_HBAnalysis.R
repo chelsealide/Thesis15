@@ -5,23 +5,27 @@
 
 # ! This code is ONLY descriptives/stats for the first response in Experiment 2 !
 
-
+require(ggplot2)
+require(plyr)
+require(lme4)
+require(nlme)
 
 # Load in data set & kick out excluded participants ----
 
 raw.data <- read.csv("Experiment2Data.csv")
 
 mydata <- raw.data[raw.data$Include == 1,]
-mydata <- raw.data[!is.na(raw.data$Has.Exploration.Period),]
 mydata <- raw.data[!is.na(raw.data$Response..First.Action.),]
 
 # Subset the predictors (condition, language, hands) and response variable (first action)
 
 subset.null <- NULL
+subset.null$Participant = mydata$Participant..
 subset.null$Condition = as.factor(mydata$Condition)
 subset.null$Language = as.factor(mydata$Lang.Condition)
 subset.null$Hands = as.factor(mydata$Action.Condition)
-subset.null$Response = as.factor(ifelse(mydata$Response..First.Action. == mydata$Response..First.Action.[1],0,1))
+subset.null$Response = as.factor(mydata$Response..First.Action.)
+
 
 # The last line recodes the responses as 0s and 1s -- basically: 
 # "If the response is the same as the first line (which was a hand touch), give it a 0, else give it a 1"
@@ -33,18 +37,42 @@ Exp.2 <- as.data.frame(subset.null)
 
 ### Graph ----
 
-require(ggplot2)
 
 Exp.2$Response <- factor(Exp.2$Response, levels = rev(levels(Exp.2$Response)))
 p <- ggplot(data=Exp.2, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + ylab("Proportion of Responses") + 
   labs(fill="Response Type") + ggtitle("First Response Action") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
   p + scale_fill_manual(values=c("deepskyblue3","chartreuse3"), 
-                        breaks=c("1", "0"),
+                        breaks=c("Head", "Hand"),
                         labels=c("Head Touch", "Hand Touch"))
   
 
 
-### Planned Comparisons ----
-
+### Fitting Models & Checking Effects by Removal ----
   
-
+  
+response.model <- lmer(Response ~ Hands*Language + (1|Participant), data=Exp.2, family="binomial")
+  
+  # No interaction 
+  
+    model2 <- lmer(Response ~ Hands + Language + (1|Participant), data=Exp.2, family="binomial")
+    anova(response.model, model2)
+  
+  ### chisq = 0.09, df = 5, p = .76
+  
+  
+  # No Hands 
+  
+    model3 <- lmer(Response ~ Language + (1|Participant), data=Exp.2, family="binomial")
+    anova(model2, model3)
+  
+  ### chisq = 1.92, df = 4, p = 0.17
+  
+  
+  # No Langauge 
+  
+    model4 <- lmer(Response ~ Hands + (1|Participant), data=Exp.2, family="binomial")
+    anova(model2, model4)
+  
+  ### chisq = 2.62, df = 4, p = 0.11
+ 
+  

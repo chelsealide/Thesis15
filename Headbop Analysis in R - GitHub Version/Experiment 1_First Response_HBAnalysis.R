@@ -1,6 +1,10 @@
 
 
 
+require(ggplot2)
+
+
+
 ### Load data for Experiment 1 ----
 
 
@@ -28,7 +32,7 @@ Exp.1 <- as.data.frame(subset.null)
 
 ### Graph ----
 
-require(ggplot2)
+
 
 Exp.1$Response <- factor(Exp.1$Response, levels = rev(levels(Exp.1$Response)))
 

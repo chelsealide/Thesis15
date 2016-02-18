@@ -96,11 +96,11 @@ attach(mydata)
         
         # age (t)
         t.test(Days.Old~Action.Condition)  # t = -1.25, df = 11.93, p = 0.24
-        
+        t.test(Days.Old~Lang.Condition)    # t = 0.50, df = 13.91, p = 0.62
+         
         # vocab (t)
-        fit1 <- lm(Raw.MCDI..Harvard.Only.~1)
-        fit2 <- lm(Raw.MCDI..Harvard.Only.~Lang.Condition*Action.Condition)  # F = .12, p = .95
-        anova(fit1, fit2)
+        t.test(Raw.MCDI..Harvard.Only.~Action.Condition)  # t = -0.13, df = 10.88, p = 0.89
+        t.test(Raw.MCDI..Harvard.Only.~Lang.Condition)    # t = -0.15, df = 14.90, p = 0.88
   
   
 detach(mydata)

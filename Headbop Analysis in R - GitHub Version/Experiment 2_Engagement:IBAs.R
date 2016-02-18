@@ -32,11 +32,11 @@ DurationSums <- aggregate(. ~ Participant, data=e, FUN=sum)
 
 Engagement <- subset(e, !duplicated(e[1]))
 Engagement[5] <- as.vector(DurationSums[5])
-colnames(Engagement) <- c("Participant", "Condition", "Hands", "Language", "Summed Duration")
+colnames(Engagement) <- c("Participant", "Condition", "Hands", "Language", "Duration")
 attach(Engagement)
 
-x11()
-boxplot(`Summed Duration`~ Condition, data = Engagement, main = "Duration of Engagement During Exploration", 
+
+boxplot(Duration~ Condition, data = Engagement, main = "Duration of Engagement During Exploration", 
         xlab="Condition", ylab="Duration (s)")
 
 
@@ -44,27 +44,33 @@ boxplot(`Summed Duration`~ Condition, data = Engagement, main = "Duration of Eng
 
 # By Hands
 
-t.test(Engagement$`Summed Duration`~Engagement$Hands)
+t.test(Duration~Hands)
 
 # By Language
 
-t.test(Engagement$`Summed Duration`~Engagement$Language)
+t.test(Duration~Language)
 
 # Model fitting
 
-
-null.fit <- aov(`Summed Duration` ~ Hands, data=Engagement)
-
-fit.1 <- aov(`Summed Duration` ~ Hands + Language, data=Engagement)
-
-fit.2 <- aov(`Summed Duration`~ Hands*Language, data=Engagement)
-
-eng.comparison <- anova(null.fit,fit.1, fit.2)
-eng.comparison 
+model.fit <- lme(Duration~Hands*Language + (1|Participant), data = Engagement)
  
 ## Variance in Engagement during exploration period is not explained by Hands/Language, or any interaction between the two
 
 detach(Engagement)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### Subsetting "IBAs" ----
