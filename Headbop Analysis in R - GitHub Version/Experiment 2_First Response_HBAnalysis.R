@@ -34,7 +34,6 @@ subset.null$Response = as.factor(mydata$Response..First.Action.)
 
 Exp.2 <- as.data.frame(subset.null)
 
-
 ### Graph ----
 
 

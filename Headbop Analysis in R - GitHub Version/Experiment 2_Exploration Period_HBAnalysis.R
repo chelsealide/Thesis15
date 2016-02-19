@@ -444,8 +444,6 @@ ever.head.plot
   
   
   
-  
-
 
 
 

@@ -88,6 +88,7 @@ IBAs[5] <- as.vector(DurationSums[5])
 colnames(IBAs) <- c("Participant", "Condition", "Hands", "Language", "Summed Duration")
 attach(IBAs)
 
+
 x11()
 boxplot(`Summed Duration`~ Condition, data = IBAs, main = "Duration of Engagement During Exploration", 
         xlab="Condition", ylab="Duration (s)")
