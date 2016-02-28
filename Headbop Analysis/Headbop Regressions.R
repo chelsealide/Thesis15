@@ -5,6 +5,8 @@
 
 require(glmr)
 require(stats)
+install.packages("pequod")
+require(pequod)
 
 
 # Experiment 1 /// First Response \\\ Logistic Regression ---- 
@@ -115,6 +117,8 @@ detach(data)
    
     
     
+    
+
 # Experiment 2 /// Exploration Patterns (Head & Hand Touches) \\\ Regression ----
     
     
