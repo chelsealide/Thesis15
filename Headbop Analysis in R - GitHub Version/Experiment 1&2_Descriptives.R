@@ -223,7 +223,7 @@ merged.des$Condition.y <- NULL
 merged.des$Hands.y <- NULL
 merged.des$Language.y <- NULL
 descriptives <- merged.des
-  colnames(descriptives) <- c("Participant", "Condition", "Language", "Hands", "Gender", "Days.Old", "MCDI", "Head.Touches", "Hand.Touches", "Total.Responses")
+  colnames(descriptives) <- c("Participant", "Condition", "Language", "Hands", "Gender", "Days.Old", "MCDI", "First Response", "Head.Touches", "Hand.Touches", "Total.Responses")
 
 ### Add in Duration info 
   

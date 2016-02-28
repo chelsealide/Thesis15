@@ -22,6 +22,9 @@ subset.null$Language = as.factor(mydata$Lang.Condition)
 subset.null$Hands = as.factor(mydata$Action.Condition)
 subset.null$Response = as.factor(ifelse(mydata$Response == mydata$Response[1],0,1))
 
+
+
+
 # The last line recodes the responses as 0s and 1s -- basically: 
 # "If the response is the same as the first line (which was a hand touch), give it a 0, else give it a 1"
 
