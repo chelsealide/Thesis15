@@ -3,7 +3,6 @@
 ### Harvard University, 2016
 
 
-install.packages("glm")
 require(glmr)
 require(stats)
 
@@ -63,7 +62,6 @@ detach(data)
 # Experiment 2 /// First Response \\\ Logistic Regression ----
 
 
-
 ### Load in cleaned data 
 
   raw.data <- read.csv("CleanData.csv")
@@ -115,6 +113,7 @@ attach(data)
 detach(data)
     
    
+    
     
 # Experiment 2 /// Exploration Patterns (Head & Hand Touches) \\\ Regression ----
     
@@ -192,6 +191,7 @@ attach(data)
 
   
   
+    
     
 # Experiment 2 /// Engagement (duration) \\\ Regression ----
     
