@@ -3,7 +3,6 @@
 ### Harvard University, 2016
 
 
-require(glmr)
 require(stats)
 install.packages("pequod")
 require(pequod)
@@ -197,6 +196,13 @@ attach(data)
   
     
     
+    
+# Experiment 2 /// Exploration Patterns (Head & Hand Touches) \\\ Simple Slopes (t test equivalent) ---- 
+    
+    simple.fit <- lmres(Head.Touches~Hands+Language, data = data)
+    summary(simple.fit)
+    s_slopes <- simpleSlope(simple.fit, pred = Hands, mod1 = Language)
+
 # Experiment 2 /// Engagement (duration) \\\ Regression ----
     
     # Without Interaction
