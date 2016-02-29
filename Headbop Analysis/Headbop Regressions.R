@@ -201,7 +201,7 @@ attach(data)
     
     simple.fit <- lmres(Head.Touches~Hands+Language, data = data)
     summary(simple.fit)
-    s_slopes <- simpleSlope(simple.fit, pred = Hands, mod1 = Language)
+    s_slopes <- simpleSlope(simple.fit, pred = "Hands", mod1 = "Language")
 
 # Experiment 2 /// Engagement (duration) \\\ Regression ----
     
