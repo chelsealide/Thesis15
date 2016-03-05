@@ -12,7 +12,7 @@ raw.data <- read.csv("Experiment1Data.csv")
 
 # Kick out excluded participants 
 
-mydata <- raw.data[raw.data$Include == 1,]
+mydata <- raw.data[raw.data$Inclusion == 1,]
 
 # Data visualization 
 
