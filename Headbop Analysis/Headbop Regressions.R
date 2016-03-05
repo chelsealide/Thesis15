@@ -230,9 +230,7 @@ attach(data)
     test12 <- glm(IBA.Duration~Hands*Language)
     coef(test12)
     summary(test12)
-    
+
 detach(data)   
     
-
-    
-    
+   
