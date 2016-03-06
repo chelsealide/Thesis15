@@ -197,6 +197,7 @@ attach(data)
     
     
     
+    
 # Experiment 2 /// Exploration Patterns (Head & Hand Touches) \\\ Simple Slopes (t test equivalent) ---- 
     
     simple.fit <- lmres(Head.Touches~Hands+Language, data = data)
@@ -234,3 +235,5 @@ attach(data)
 detach(data)   
     
    
+    
+    
