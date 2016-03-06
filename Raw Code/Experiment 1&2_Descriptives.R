@@ -16,7 +16,7 @@ raw.data <- read.csv("Experiment1Data.csv")
 
 # Kick out excluded participants 
 
-mydata <- raw.data[raw.data$Include == 1,]
+mydata <- raw.data[raw.data$Inclusion == 1,]
 mydata$Months.Old <- I(mydata$Days.Old/30)
 attach(mydata)
 
@@ -41,7 +41,8 @@ attach(mydata)
   
  # Vocab & Age
   
-  ggplot(mydata, aes(x=Days.Old, y=Raw.MCDI..Harvard.Only., color=Condition)) + geom_point(size=5) + geom_smooth(method=lm, se=FALSE) + xlab("Age (days)") + ylab("Score")
+  ggplot(mydata, aes(x=Days.Old, y=Raw.MCDI..Harvard.Only., color=Condition)) + geom_point(size=5) + geom_smooth(method=lm, se=FALSE) + xlab("Age (days)") + ylab("MCDI Score") + 
+    ggtitle("Age and Vocabulary Score by Condition") + theme(plot.title = element_text(lineheight=1.5, face="bold"))
   
   # Gender & Condition
   
