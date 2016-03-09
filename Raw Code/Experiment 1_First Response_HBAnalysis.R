@@ -60,8 +60,11 @@ bp + scale_fill_manual(values=c("deepskyblue3", "chartreuse3"),
 
 ### Location of First Response (Globe, Button, Neither)
 
-ggplot(data=mydata, aes(x=Response.Location)) +
-  geom_bar(stat="bin") + xlab(NULL) + ggtitle("Location of First Response Imitation") +
-  theme(plot.title = element_text(size=15, face="bold"))
- 
+p <- ggplot(data=mydata, aes(x=Response.Location)) + geom_bar(stat="bin") + theme_light() +
+  ylab("Count \n") + theme(axis.title.y=element_text(size = 13, face = "bold")) + scale_y_continuous(breaks=seq(0, 14, 2)) +
+  ggtitle("Location of First Response Imitation") + theme(plot.title=element_text(vjust=1.5, face="bold")) + 
+  xlab("\n Location") + theme(axis.title.x=element_text(size = 13, face = "bold"))
+p + scale_x_discrete(limits=c("Globe", "Button", "Box")) 
 
+
+ 
