@@ -12,7 +12,7 @@ raw.data <- read.csv("Experiment1Data.csv")
 
 # Kick out excluded participants 
 
-mydata <- raw.data[raw.data$Inclusion == 1,]
+mydata <- raw.data[raw.data$Include == 1,]
 
 # Data visualization 
 
@@ -39,12 +39,24 @@ Exp.1 <- as.data.frame(subset.null)
 
 Exp.1$Response <- factor(Exp.1$Response, levels = rev(levels(Exp.1$Response)))
 
-p <- ggplot(data=Exp.1, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + ylab("Proportion of Responses") + 
-  labs(fill="Response") + ggtitle("First Response Action") + xlab("Condition") + theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
-p + scale_fill_manual(values=c("deepskyblue3","chartreuse3"), 
-                      breaks=c("1", "0"),
-                      labels=c("Head Touch", "Hand Touch"))
+p <- ggplot(data=Exp.1, aes(x=Condition, fill=Response)) + geom_bar() + theme_light() + 
+  ylab("Count") + theme(axis.title.y=element_text(size = 13, face = "bold")) + scale_y_continuous(breaks=seq(0, 10, 2)) + labs(fill="Response Type") + ggtitle("First Response Action") + 
+  theme(plot.title=element_text(vjust=1.5, face="bold")) + xlab("\n Condition") +theme(axis.title.x=element_text(vjust=.1, size = 13, face = "bold")) 
+bp <- p + scale_x_discrete(limits=c("Dax to toy, Hands Exposed","Dax toy, Hands Exposed","Dax to toy, Hands Occupied", "Dax toy, Hands Occupied"), 
+                           labels = c("Hands Exposed \n Manner Language","Hands Exposed \n Outcome Language","Hands Occupied \n Manner Language", "Hands Occupied \n Outcome Language"))
+bp + scale_fill_manual(values=c("deepskyblue3", "chartreuse3"), 
+                       breaks=c("1", "0"),
+                       labels=c("Head Touch", "Hand Touch")) 
 
+
+p <- ggplot(data=Exp.1, aes(x=Condition, fill=Response)) + geom_bar(position="fill") + theme_light() + 
+  ylab("Proportion of Responses \n") + theme(axis.title.y=element_text(size = 13, face = "bold")) + labs(fill="Response Type") + ggtitle("First Response Action") + 
+  theme(plot.title=element_text(vjust=1.5, face="bold")) + xlab("\n Condition") +theme(axis.title.x=element_text(vjust=.1, size = 13, face = "bold")) 
+bp <- p + scale_x_discrete(limits=c("Dax to toy, Hands Exposed","Dax toy, Hands Exposed","Dax to toy, Hands Occupied", "Dax toy, Hands Occupied"), 
+                           labels = c("Hands Exposed \n Manner Language","Hands Exposed \n Outcome Language","Hands Occupied \n Manner Language", "Hands Occupied \n Outcome Language"))
+bp + scale_fill_manual(values=c("deepskyblue3", "chartreuse3"), 
+                       breaks=c("1", "0"),
+                       labels=c("Head Touch", "Hand Touch")) 
 
 ### Location of First Response (Globe, Button, Neither)
 
